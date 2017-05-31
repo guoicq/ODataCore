@@ -17,3 +17,11 @@ Install-Package Microsoft.EntityFrameworkCore -Version 1.1.2
 Install-Package Microsoft.ApplicationInsights.AspNetCore -Version 2.0.0
 
 Install-Package Microsoft.Extensions.Logging.Debug -Version 1.1.1
+
+
+
+Using Postman, or Chrome, you can then try the OData API:
+
+http://localhost:5555/odata/Peoples?$top=5
+
+http://localhost:5555/odata/Peoples?$top=5&$skip=5
