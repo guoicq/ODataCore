@@ -15,9 +15,14 @@ namespace oData
         IEnumerable<Person> Get();
     }
 
+    public interface ITripsService
+    {
+        IEnumerable<Trip> Get();
+    }
+
     [EnableQuery]
     [ODataRoute("Peoples")]
-    public class PeoplesController : ControllerBase, IPeopleService
+    public class PeoplesController : Controller
     {
         [HttpGet]
         public IEnumerable<Person> Get()
@@ -26,10 +31,34 @@ namespace oData
         }
 
         [ODataRoute("({key})")]
-        [HttpGet("({key})")]
-        public async Task<IActionResult> GetEntity(string key)
+        public IActionResult GetEntity(string key)
         {
             var entity = DemoDataSources.Instance.People.FirstOrDefault(c => c.ID == key);
+            return entity == null ? (IActionResult)NotFound() : new ObjectResult(entity);
+        }
+
+        [ODataRoute("({key})/Trips")]
+        public IActionResult GetTrips(string key)
+        {
+            var entity = DemoDataSources.Instance.People.FirstOrDefault(c => c.ID == key);
+            return entity == null ? (IActionResult)NotFound() : new ObjectResult(entity.Trips);
+        }
+    }
+
+    [EnableQuery]
+    [ODataRoute("Trips")]
+    public class TripsController : Controller
+    {
+        [HttpGet]
+        public IEnumerable<Trip> Get()
+        {
+            return DemoDataSources.Instance.Trips.AsQueryable();
+        }
+
+        [ODataRoute("({key})")]
+        public IActionResult GetEntity(string key)
+        {
+            var entity = DemoDataSources.Instance.Trips.FirstOrDefault(c => c.ID == key);
             return entity == null ? (IActionResult)NotFound() : new ObjectResult(entity);
         }
 

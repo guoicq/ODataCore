@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -33,8 +32,9 @@ namespace oData
         {
             // Add framework services.
             services.AddOData();
-            services.AddScoped<IPeopleService, PeoplesController>();
-            
+            //services.AddScoped<IPeopleService, PeoplesController>();
+            //services.AddScoped<ITripsService, TripsController>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,21 +43,17 @@ namespace oData
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            UseODataEFGenerator(app);
-        }
-
-        public static void UseODataEFGenerator(IApplicationBuilder app)
-        {
             var provider = app.ApplicationServices.GetRequiredService<IAssemblyProvider>();
             app.UseMvc(builder => builder.MapODataRoute("odata", GetEdmModel(provider)));
         }
-
+        
         private static IEdmModel GetEdmModel(IAssemblyProvider assemblyProvider)
         {
             var builder = new ODataConventionModelBuilder(assemblyProvider);
             builder.EntitySet<Person>("Peoples");
             builder.EntityType<Person>().HasKey(x => x.ID);
-
+            builder.EntitySet<Trip>("Trips");
+            builder.EntityType<Trip>().HasKey(x => x.ID);
             return builder.GetEdmModel();
         }
     }
