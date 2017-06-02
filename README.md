@@ -25,3 +25,5 @@ Using Postman, or Chrome, you can then try the OData API:
 http://localhost:5555/odata/Peoples?$top=5
 
 http://localhost:5555/odata/Peoples?$top=5&$skip=5
+
+http://localhost:5555/odata/Peoples('001')/Trips
